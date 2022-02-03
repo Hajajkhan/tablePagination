@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Through Loop</title>
+    <style>
+        body{
+            align-items: center;
+        }
+      td{
+          padding: 5px;
+        border: 1px solid black;
+      }
+      .navBar{
+          width: 100%;
+          background-color:gainsboro;
+          display: flex;
+          justify-content: space-between;
+      }
+      #searchInput{
+          padding: 5px;
+          width:50%;
+      }
+      .btn>button{
+          border-radius: 3px;
+          margin: 2px;
+          padding: 5px;
+          border:0.1em solid #FFFFFF;
+          border-radius:0.12em;
+          box-sizing: border-box;
+          color:#FFFFFF;
+            text-align:center;
+          background-color: #3f3fe9;
+          color: white;
+          justify-content: right;
+      }
+
+      .table{
+          display: flex;
+          justify-content: center;
+          flex-direction: row;
+      }
+      tr:nth-child(even){
+          background-color: #ddd;
+      }
+      .btn1{
+          display: flex;
+          justify-content: center;
+          margin: 20px;
+      }
+      .btn1>input{
+        display:inline-block;
+        padding:0.5em 3em;
+        border:0.16em solid #FFFFFF;
+        margin:0 0.3em 0.3em 0;
+        box-sizing: border-box;
+        color:#03030e;
+        border-color:#5164cc;
+        font-weight:400;
+        text-align:center;
+      }
+      
+    </style>
+    <script src="arrayData.js"></script>
+</head>
+<body>
+    <!--/****************** Pagination *************/-->
+    
+        <div id="list"></div>
+  <script>
+    /**
+      ******* ******* Template ******* *******
+     * in this program we are going to make table by loop that all data is given in array of objects
+     * first we will make tha table elements as thead,tbody,tfoot
+     * we will simply write those elements in HTML that will use only one time or that will not change on every line
+     * static elements are like thead, and tfoot. these two sectio wil write only one time
+     * other part is tbody in which we will work. so we will create the elements in HTML by Js for Loop
+     * and the tbody element will append in table.
+     * we will apply the for loop on array to get the every property of every objects thats in array
+     * then we will make the function to search table data from input type search
+    **/
+  </script>
+  <div class="navBar">
+    <input id="searchInput" type="search" onkeyup="myFunction()" placeholder="Serach Statements">
+    <div class="btn">
+    <button id="allEle" onclick="funcForAll()">All Elements</button>
+    <button id="compEle" onclick="funcompleted()">Completed Elements</button>
+    <button id="uncompEle" onclick="fununcompleted()">InCompleted Elements</button>
+    </div>
+    </div>
+    <p id="demo"></p>
+    <div class="table">
+    <table id="main">
+        <thead>
+            <tr>
+            <td>Id</td>
+            <td>Title</td>
+            <td>Completed</td>
+            </tr>
+        </thead>
+        <tbody id="append">
+
+        </tbody>
+        <tfoot id="tableF">
+
+        </tfoot>
+    </table>
+    </div>
+    <div class="btn1">
+    <input type="button" id="first" onclick="firstPage()" value="first" />
+    <input type="button" id="next" onclick="nextPage()" value="next" />
+    <input type="button" id="previous" onclick="previousPage()" value="previous" />
+    <input type="button" id="last" onclick="lastPage()" value="last" />
+    </div>
+    <script>
+        //===============Area for Table-Body============//
+        var result;
+        var count=0;
+        var count1=0;
+        var array1=[];
+        //console.log(count);
+        let text="";
+        let a;
+        function funcForAll(){
+            const myNode = document.getElementById("append");
+            myNode.innerHTML = '';
+            const myNode1 = document.getElementById("tableF");
+            myNode1.innerHTML = '';
+            for (let i=0; i<array.length; i++) {
+                var tableRow=document.createElement('tr');
+                var inner = document.createElement("td");
+                var inner1=document.createElement('td');
+                var inner2=document.createElement('td');
+                inner2.id="thirdId";
+                a=inner2.id;
+                inner.innerHTML = array[i].id;
+                inner1.innerHTML=array[i].title;
+                //inner2.innerHTML=array[i].completed;
+                //"declaring inner2.innerHTML below in if-else conditions"
+                completed=array[i].completed;
+                tableRow.appendChild(inner);
+                tableRow.appendChild(inner1);
+                tableRow.appendChild(inner2);
+                document.getElementById("append").appendChild(tableRow);
+
+                //========filtering the objects by if-else conditions===========//
+                if(array[i].completed==true){
+                inner2.innerHTML="completed";
+                }else {
+                inner2.innerHTML="incompleted";
+                inner2.style.color="red";
+                }
+                //console.log(inner2.innerHTML);
+            }
+            //=============Area of Table-Footer===============//
+
+            var footRow=document.createElement('tr');
+            var footdata=document.createElement('td');
+            var footdata1=document.createElement('td');
+            var footdata2=document.createElement('td');
+            footRow.appendChild(footdata);
+            footRow.appendChild(footdata1);
+            footRow.appendChild(footdata2);
+            //console.log(footRow); 
+            footdata2.innerHTML=+count+" items completed"+"<br>"+count1+" items incompleted";
+            footdata2.style.color="blue";
+            document.getElementById("tableF").appendChild(footRow);
+        }
+        for(let i=0;i<array.length;i++){
+            result = array[i].completed;
+            //console.log(result);
+            if(result==true){
+                count++;
+                //console.log(count);
+            } else if(result==false){
+                count1++;
+            }
+        }
+        //==============Searching the Statements through input type Search===============//
+
+        function myFunction() {
+            var input = document.getElementById("searchInput");
+            var filter = input.value.toLowerCase();
+            var table = document.getElementById("main");
+            var tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (let i = 0; i < tr.length; i++) {
+                var td = tr[i].getElementsByTagName("td") ; 
+                for(j=0 ; j<td.length ; j++){
+                    let tdata = td[j] ;
+                    if (tdata) {
+                        //tdata.innerHTML.toLowerCase().includes(filter)
+                        if (tdata.innerHTML.toLowerCase().indexOf(filter) > -1){
+                            tr[i].style.display = "";
+                            break ; 
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    } 
+                }
+            }
+        }
+        function funcompleted(){
+            const myNode = document.getElementById("append");
+            myNode.innerHTML = '';
+            const myNode1 = document.getElementById("tableF");
+            myNode1.innerHTML = '';
+            var count2=0;
+            var newArray = array.filter(function (comp)
+                {
+                    return comp.completed==true;
+                }
+            );
+            for (let i=0; i<newArray.length; i++) {
+                var tableRow=document.createElement('tr');
+                var inner = document.createElement("td");
+                var inner1=document.createElement('td');
+                var inner2=document.createElement('td');
+                inner2.id="thirdId";
+                a=inner2.id;
+                inner.innerHTML = newArray[i].id;
+                inner1.innerHTML=newArray[i].title;
+
+                //"declaring inner2.innerHTML below in if-else conditions"
+                completed=newArray[i].completed;
+                tableRow.appendChild(inner);
+                tableRow.appendChild(inner1);
+                tableRow.appendChild(inner2);
+                document.getElementById("append").appendChild(tableRow);
+
+                //========filtering the objects by if-else conditions===========//
+                if(newArray[i].completed==true){
+                    inner2.innerHTML="completed";
+                }else {
+                    inner2.innerHTML="incompleted";
+                    inner2.style.color="red";
+                }
+                //console.log(inner2.innerHTML);
+            }
+                //=============Area of Table-Footer===============//
+
+            for(let i=0;i<array.length;i++){
+                result = array[i].completed;
+                //console.log(result);
+                if(result==true){
+                    count2++;
+                }
+            }
+            var footRow=document.createElement('tr');
+            var footdata=document.createElement('td');
+            var footdata1=document.createElement('td');
+            var footdata2=document.createElement('td');
+            footRow.appendChild(footdata);
+            footRow.appendChild(footdata1);
+            footRow.appendChild(footdata2);
+            //console.log(footRow); 
+            footdata2.innerHTML=+count2+" items completed";
+            footdata2.style.color="blue";
+            document.getElementById("tableF").appendChild(footRow);
+            //console.log(newArray);
+            //ocument.getElementById('main').appendChild(newArray)
+        }
+        function fununcompleted(){
+            const myNode = document.getElementById("append");
+            myNode.innerHTML = '';
+            const myNode1 = document.getElementById("tableF");
+            myNode1.innerHTML = '';
+            var count3=0;
+            var newArray = array.filter(function (comp)
+                {
+                    return comp.completed==false;
+                }
+            );
+            //console.log(newArray);
+            for (let i=0; i<newArray.length; i++) {
+                var tableRow=document.createElement('tr');
+                var inner = document.createElement("td");
+                var inner1=document.createElement('td');
+                var inner2=document.createElement('td');
+                inner2.id="thirdId";
+                a=inner2.id;
+                inner.innerHTML = newArray[i].id;
+                inner1.innerHTML=newArray[i].title;
+                //inner2.innerHTML=array[i].completed;
+                //"declaring inner2.innerHTML below in if-else conditions"
+                completed=newArray[i].completed;
+                tableRow.appendChild(inner);
+                tableRow.appendChild(inner1);
+                tableRow.appendChild(inner2);
+                document.getElementById("append").appendChild(tableRow);
+
+                //========filtering the objects by if-else conditions===========//
+                if(newArray[i].completed==true){
+                    inner2.innerHTML="completed";
+                }else {
+                    inner2.innerHTML="incompleted";
+                    inner2.style.color="red";
+                }
+                //console.log(inner2.innerHTML);
+            }
+            //=============Area of Table-Footer===============//
+
+            for(let i=0;i<array.length;i++){
+                result = array[i].completed;
+                //console.log(result);
+                if(result==false){
+                    count3++;
+                }
+            }
+            var footRow=document.createElement('tr');
+            var footdata=document.createElement('td');
+            var footdata1=document.createElement('td');
+            var footdata2=document.createElement('td');
+            footRow.appendChild(footdata);
+            footRow.appendChild(footdata1);
+            footRow.appendChild(footdata2);
+            //console.log(footRow); 
+            footdata2.innerHTML=+count3+" items incompleted";
+            footdata2.style.color="blue";
+            document.getElementById("tableF").appendChild(footRow);
+        }
+        //**********************************//
+    </script>
+    <script>
+        //==============Pagination Section==============//
+        /**
+         * we will get the data from array
+         * then convert it into table data form
+         * then we will apply the conditions on it though formulas
+         * we will declare the items number on per page
+         * we will make the function for next or previous page by increment and decrement operators
+         * then we will make the function in which we declare that how many number of rows to display from table through slice method
+        **/
+        var list = new Array();
+        var slicing = new Array();
+        var currentPage = 1;
+        var numberPerPage = 10;
+        var numberOfPages = 0;
+        var numberOfPages = getNumberOfPages();
+
+        function getNumberOfPages() {
+            return Math.ceil(array.length / numberPerPage);
+        }
+
+        function nextPage() {
+            currentPage += 1;
+            loadList();
+        }
+
+        function previousPage() {
+            currentPage -= 1;
+            loadList();
+        }
+
+        function firstPage() {
+            currentPage = 1;
+            loadList();
+        }
+
+        function lastPage() {
+            currentPage = numberOfPages;
+            loadList();
+        }
+
+        function loadList() {
+            var begin = ((currentPage - 1) * numberPerPage);
+            var end = begin + numberPerPage;
+
+            slicing = array.slice(begin, end);
+            drawList();
+            check();
+        }
+    
+        function drawList() {
+            document.getElementById("append").innerHTML = "";
+            for (let i=0; i<slicing.length; i++) {
+                var tableRow=document.createElement('tr');
+                var inner = document.createElement("td");
+                var inner1=document.createElement('td');
+                var inner2=document.createElement('td');
+                inner2.id="thirdId";
+                a=inner2.id;
+                inner.innerHTML = slicing[i].id;
+                inner1.innerHTML= slicing[i].title;
+                //inner2.innerHTML=array[i].completed;
+                //"declaring inner2.innerHTML below in if-else conditions"
+                completed=slicing[i].completed;
+                tableRow.appendChild(inner);
+                tableRow.appendChild(inner1);
+                tableRow.appendChild(inner2);
+                document.getElementById("append").appendChild(tableRow);
+
+                //========filtering the objects by if-else conditions===========//
+                if(slicing[i].completed==true){
+                    inner2.innerHTML="completed";
+                }else {
+                    inner2.innerHTML="incompleted";
+                    inner2.style.color="red";
+                }
+                //console.log(inner2.innerHTML);
+            }
+        }
+        function check() {
+            document.getElementById("next").disabled = currentPage == numberOfPages ? true : false;
+            document.getElementById("previous").disabled = currentPage == 1 ? true : false;
+            document.getElementById("first").disabled = currentPage == 1 ? true : false;
+            document.getElementById("last").disabled = currentPage == numberOfPages ? true : false;
+        }
+
+        function load() {
+            //makeList();
+            loadList();
+        }
+        window.onload = load;
+
+
+
+    </script>
+</body>
+</html>
